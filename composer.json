@@ -10,6 +10,7 @@
     "ext-mbstring": "*",
     "ext-bcmath": "*"
   },
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Clover\\Nano\\": ""
