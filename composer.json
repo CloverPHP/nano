@@ -1,0 +1,18 @@
+{
+  "name": "cloverphp\/nano",
+  "require": {
+    "php": "^5.6 || >=7.0",
+    "ext-json": "*",
+    "ext-mysqli": "*",
+    "ext-pcntl": "*",
+    "ext-ctype": "*",
+    "ext-zlib": "*",
+    "ext-mbstring": "*",
+    "ext-bcmath": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Clover\\Nano\\": ""
+    }
+  }
+}
