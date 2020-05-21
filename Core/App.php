@@ -10,6 +10,7 @@ use Clover\Nano\Exception\Normal;
 use Clover\Nano\Exception\DBQueryError;
 use Clover\Nano\Exception\InternalError;
 use Clover\Nano\Exception\UnexpectedError;
+use Throwable;
 
 /**
  * Class App
@@ -113,7 +114,6 @@ class App
     }
 
     /**
-     * @throws ReflectionException
      */
     public function __invoke()
     {
@@ -125,6 +125,7 @@ class App
                 $this->event->emit('access_check', [$this]);
                 $ctrl = $class->newInstanceArgs([$this]);
                 $ctrl->__invoke($this);
+                $this->commit();
                 $output = $this->response->fetch();
             } else {
                 throw new InternalError("Controller Not Found {$ctrlName}");
@@ -143,9 +144,15 @@ class App
                     $output = $ex->fetch();
                     $output['profiler'] = $this->profiler->fetch();
                 }
-            } catch (Exception $ex) {
-
+            } catch (Throwable $ex) {//php7.0+
+                $this->handleException($ex);
+            } catch (Exception $ex) {//php5.6.x
+                $this->handleException($ex);
             }
+        } catch (Throwable $ex) {//php7.0+
+            $this->handleException($ex);
+        } catch (Exception $ex) {//php5.6.x
+            $this->handleException($ex);
         }
 
         $this->event->emit('access_log', [$this, &$output]);
@@ -302,22 +309,25 @@ class App
         });
 
         //3.设置自定义异常处理
-        set_exception_handler(function (Exception $ex) {
+        set_exception_handler([$this, 'handleException']);
+    }
 
-            if ($this->ignoreError())
-                return;
-            $output = array_merge(array(
-                'status' => 'error',
-                'error' => 'unexpected_error',
-                'code' => 'exception',
-                'desc' => "exception:{$ex->getMessage()}@{$ex->getFile()}:{$ex->getLine()}",
-                'profiler' => $this->profiler->fetch()
-            ));
-            $output['profiler']['systrace'] = $ex->getTraceAsString();
-            $this->logger->emergency($output['desc']);
-            $this->response->output($output);
-            exit(0);
-        });
+    /**
+     * @param Exception $ex
+     */
+    final public function handleException($ex)
+    {
+        $output = array_merge(array(
+            'status' => 'error',
+            'error' => 'unexpected_error',
+            'code' => 'exception',
+            'desc' => "exception:{$ex->getMessage()}@{$ex->getFile()}:{$ex->getLine()}",
+            'profiler' => $this->profiler->fetch()
+        ));
+        $output['profiler']['systrace'] = $ex->getTraceAsString();
+        $this->logger->emergency($output['desc']);
+        $this->response->output($output);
+        exit(0);
     }
 
     /**
