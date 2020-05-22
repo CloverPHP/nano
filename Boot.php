@@ -106,7 +106,7 @@ class Boot
         if (isset($_SERVER['php_auth_pw']))
             $header['password'] = (string)$_SERVER['php_auth_pw'];
         if (isset($_SERVER['content_type']))
-            $header['content_type'] = trim(strstr($header['content_type'], ';', true));
+            $header['content_type'] = trim(strstr($_SERVER['content_type'], ';', true));
         return $header;
     }
 
