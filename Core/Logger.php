@@ -67,11 +67,12 @@ final class Logger
             $this->writeMethod = 'writeFile';
             $logPath = !empty($config['path']) ? $config['path'] : '/tmp/';
             $logFile = !empty($config['file']) ? $config['file'] : APP_NAME;
-            if ($logPath) {
+            if (empty($config['file']) || !file_exists($config['file'])) {
                 $this->logFile = "{$logPath}{$logFile}-" . date("Ymd") . ".log";
+            }else{
+                $this->logFile = $config['file'];
             }
         }
-
         if (isset($config['level'])) {
             $this->level = (int)$config['level'];
         }

@@ -2,12 +2,13 @@
 
 namespace Clover\Nano;
 
-use Composer\Autoload\ClassLoader;
-use Clover\Nano\Core\App;
-use Module\Hook;
-use Module\Module;
 use ReflectionClass;
 use ReflectionException;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+use Clover\Nano\Core\App;
+use Clover\Nano\Core\Common;
+use Composer\Autoload\ClassLoader;
 
 /**
  * Class Boot
@@ -15,12 +16,13 @@ use ReflectionException;
  */
 class Boot
 {
-    private $debug = false;
-    private $name = 'Api';
-    private $role = 'Api';
+    private $name = 'nano';
     private $env = 'production';
+    private $debug = false;
     private $headers = [];
     private $params = [];
+    private $cookie = [];
+    private $server = [];
 
     /**
      * Boot constructor.
@@ -29,27 +31,15 @@ class Boot
      */
     public function __construct($params = [])
     {
-        foreach ($_SERVER as $k => $v) {
-            $_SERVER[strtolower($k)] = $v;
-            //unset($_SERVER[$k]);
-        }
-        foreach ($_ENV as $k => $v) {
-            $_SERVER[strtolower($k)] = $v;
-            //unset($_SERVER[$k]);
-        }
-        foreach (['role', 'name', 'env','debug'] as $v) {
+        //定义基本常量
+        foreach (['name', 'env', 'debug'] as $v) {
             if (isset($params[$v])) {
                 $this->$v = $params[$v];
             }
         }
-
-        //
         define('APP_ENV', $this->env, true);
         define('APP_NAME', $this->name, true);
-        define('APP_ROLE', $this->role, true);
         define('APP_DEBUG', $this->debug, true);
-        define('INIT_MEMORY', memory_get_usage());
-        define('INIT_TIMESTAMP', round(microtime(true), 2), true);
         if (!defined('APP_PATH')) {
             $reflection = new ReflectionClass(ClassLoader::class);
             $appPath = explode('/', str_replace('\\', '/', dirname(dirname($reflection->getFileName()))));
@@ -58,22 +48,47 @@ class Boot
             define('APP_PATH', $appPath, true);
         }
 
-        //
-        ini_set('display_errors', APP_DEBUG ? 'On' : 'Off');
+        //默认错误设置
         error_reporting(APP_DEBUG ? E_ALL : 0);
+        ini_set('display_errors', APP_DEBUG ? 'On' : 'Off');
 
         //
-        if (php_sapi_name() !== 'cli') {
-            $this->headers = $this->getRequestHeader();
-            $this->params = $this->getRequestParams();
-        } else
-            $this->parseCmd();
+        if (defined('IN_SWOOLE')) {
+            $timezone = getenv('timezone');
+            date_default_timezone_set($timezone ? $timezone : 'Asia/Shanghai');
+            Common::initial($timezone);
+        } else {
+            $server = $env = [];
+            foreach ($_SERVER as $k => $v) {
+                $server[strtolower($k)] = $v;
+            }
 
-        //
-        $app = new App($this->headers, $this->params, $_COOKIE, $_SERVER, $_ENV);
-        $app->__invoke();
+            //
+            if (php_sapi_name() !== 'cli') {
+                $this->headers = $this->getRequestHeader();
+                $this->params = $this->getRequestParams();
+            } else
+                $this->parseCmd();
+        }
     }
 
+    /**
+     * @param Request|null $request
+     * @param Response|null $response
+     */
+    public function __invoke(Request $request = null, Response $response = null)
+    {
+        $app = new App($this->headers, $this->params, $this->cookie, $this->server, $request, $response);
+        $output = $app->__invoke();
+        if (defined('IN_SWOOLE')) {
+            if ($headers = $app->response->getHeader()) {
+                foreach ($headers as $k => $v)
+                    $response->header($k, $v);
+            }
+            $response->end($output);
+        }
+
+    }
 
     /**
      * @return array

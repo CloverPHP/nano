@@ -12,9 +12,6 @@ use DateTimeZone;
 final class Common
 {
     private static $timestamp;
-    private static $datetime;
-    private static $date;
-    private static $time;
     private static $timezone = '';
 
     /**
@@ -512,7 +509,7 @@ final class Common
                 case 'username':
                     $pass = (boolean)preg_match("/^[a-zA-Z][\w!@#$%^&*()+=]*$/", $value);
                     break;
-                case 'nickname':
+                case 'printable':
                     $pass = (boolean)preg_match("/^[[:print:]]+$/u", $value);
                     break;
                 case 'content':
@@ -741,63 +738,6 @@ final class Common
         else
             $data = json_encode($data);
         return static::fileContents($fileName, $data);
-    }
-
-    /**
-     * Get Server IP from $_SERVER global values.
-     * @return string
-     */
-    public static function getServerIp()
-    {
-        if (isset($_SERVER["SERVER_ADDR"]))
-            return $_SERVER["SERVER_ADDR"];
-        else {
-            if (stristr(PHP_OS, 'WIN')) {
-                exec('ipconfig /all', $catch);
-                foreach ($catch as $line) {
-                    $pmatch = [];
-                    if (preg_match('/IPv4 Address/i', $line, $pmatch)) {
-                        $match = [];
-                        if (preg_match('/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/i', $line, $match))
-                            return $match[1];
-                    }
-                }
-                return '';
-            } else {
-                return exec("ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'");
-            }
-        }
-    }
-
-    /**
-     * Get Client IP from $_SERVER global value, will resolve proxy or direct.
-     * @return string
-     */
-    public static function getClientIp()
-    {
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $xForward = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
-            return $xForward[0];
-        } else
-            return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-    }
-
-    /**
-     * Get Origin Domain
-     * @return mixed
-     */
-    public static function getOriginDomain()
-    {
-        if (array_key_exists('HTTP_ORIGIN', $_SERVER))
-            $origin = $_SERVER['HTTP_ORIGIN'];
-        elseif (array_key_exists('HTTP_REFERER', $_SERVER))
-            $origin = $_SERVER['HTTP_REFERER'];
-        else
-            $origin = $_SERVER['REMOTE_ADDR'];
-        $domain = parse_url($origin, PHP_URL_HOST);
-        if (empty($domain))
-            $domain = $origin;
-        return $domain;
     }
 
     /**
@@ -1066,22 +1006,20 @@ final class Common
 
     /**
      * Get Initial Date or current Date
-     * @param bool $current
      * @return string
      */
-    public static function date($current = false)
+    public static function date()
     {
-        return $current === true ? date("Y-m-d") : static::$date;
+        return date("Y-m-d");
     }
 
     /**
      * Get Initial Time or current Time
-     * @param bool $current
      * @return string
      */
-    public static function time($current = false)
+    public static function time()
     {
-        return $current === true ? date("H:i:s") : static::$time;
+        return date("H:i:s");
     }
 
     /**
@@ -1091,7 +1029,7 @@ final class Common
      */
     public static function timestamp($current = false)
     {
-        return $current === true ? microtime(true) : static::$timestamp;
+        return $current === true ? round(microtime(true),3) : static::$timestamp;
     }
 
     /**
@@ -1112,12 +1050,10 @@ final class Common
     {
         if (empty(static::$timestamp))
             static::$timestamp = microtime(true);
+
         if (!empty($timezone) && is_string($timezone) && in_array($timezone, timezone_identifiers_list(), true)) {
             date_default_timezone_set($timezone);
             static::$timezone = $timezone;
-            static::$datetime = date("Y-m-d H:i:s");
-            static::$date = date("Y-m-d");
-            static::$time = date("H:i:s");
         }
     }
 
@@ -1314,12 +1250,11 @@ final class Common
 
     /**
      * Get Initial DateTime or current DateTime
-     * @param bool $current
      * @return string
      */
-    public static function datetime($current = false)
+    public static function datetime()
     {
-        return $current === true ? date("Y-m-d H:i:s") : static::$datetime;
+        return date("Y-m-d H:i:s");
     }
 
     /**

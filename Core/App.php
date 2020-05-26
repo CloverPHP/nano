@@ -3,14 +3,15 @@
 namespace Clover\Nano\Core;
 
 use Exception;
+use Throwable;
 use ReflectionClass;
 use ReflectionException;
+use Clover\Nano\Controller;
 use Clover\Nano\Exception\Base;
 use Clover\Nano\Exception\Normal;
 use Clover\Nano\Exception\DBQueryError;
 use Clover\Nano\Exception\InternalError;
 use Clover\Nano\Exception\UnexpectedError;
-use Throwable;
 
 /**
  * Class App
@@ -73,40 +74,38 @@ class App
     private $server = [];
 
     /**
-     * @var array
-     */
-    private $env = [];
-
-    /**
      * @param array $header
      * @param array $params
      * @param array $cookie
      * @param array $server
-     * @param array $env
+     * @param \Swoole\Http\Request|null $request
+     * @param \Swoole\Http\Response|null $response
      */
-    public function __construct(array $header = [], array $params = [], array $cookie = [], array $server = [], array $env = [])
+    public function __construct(array $header = [], array $params = [], array $cookie = [], array $server = []
+        , \Swoole\Http\Request $request = null, \Swoole\Http\Response $response = null)
     {
-        //
+        //新建核心类
+        $this->server = $server;
         $this->components[Event::class] = $this->event = new Event();
         $this->components[Config::class] = $this->config = new Config($this);
         $this->components[Logger::class] = $this->logger = new Logger($this);
         $this->components[Profiler::class] = $this->profiler = new Profiler($this);
         $this->components[Request::class] = $this->request = new Request($this, $header, $params, $cookie);
         $this->components[Response::class] = $this->response = new Response($this);
+        if (defined('IN_SWOOLE')) {
+            $this->request->setSwoole($request);
+            $this->response->setSwoole($response);
+        }
 
-        //
-        $this->server = $server;
-        $this->env = $env;
-
-        //
-        $timezone = $this->config->get('timezone') ? $this->config->get('timezone') : 'Asia/Shanghai';
-        date_default_timezone_set($timezone);
-        Common::initial($timezone);
-
-        //
+        //错误处理和时区
         $this->handleError();
+        $timezone = $this->config->get('timezone');
+        if (!defined('IN_SWOOLE') && $timezone) {
+            date_default_timezone_set($timezone);
+            Common::initial($timezone);
+        }
 
-        //
+        //加载预定义钩子
         $hooks = $this->config->get('hook');
         if ($hooks) foreach ($hooks as $hook => $callback) {
             $this->event->on($hook, $callback);
@@ -119,7 +118,7 @@ class App
     {
         $output = [];
         try {
-            $ctrlName = APP_ROLE;
+            $ctrlName = $this->request->getHeader('controller', Controller::class);
             if (class_exists($ctrlName)) {
                 $class = new ReflectionClass($ctrlName);
                 $this->event->emit('access_check', [$this]);
@@ -127,9 +126,8 @@ class App
                 $ctrl->__invoke($this);
                 $this->commit();
                 $output = $this->response->fetch();
-            } else {
+            } else
                 throw new InternalError("Controller Not Found {$ctrlName}");
-            }
         } catch (Base $ex) {
             try {
                 $this->ignoreError(true);
@@ -157,6 +155,7 @@ class App
 
         $this->event->emit('access_log', [$this, &$output]);
         $this->response->output($output);
+        return $output;
 
     }
 
@@ -274,11 +273,14 @@ class App
                 ));
                 $this->logger->emergency($string);
                 $this->response->output($output);
-                exit(0);
+                //exit(0);
             }
         });
 
         //2.设置自定义错误处理
+        if (defined('IN_SWOOLE'))
+            return;
+
         set_error_handler(function ($errno, $error, $errFile, $errLine, $clear = false) {
             if ($this->ignoreError())
                 return;
@@ -317,6 +319,9 @@ class App
      */
     final public function handleException($ex)
     {
+        if (defined('IN_SWOOLE'))
+            return;
+
         $output = array_merge(array(
             'status' => 'error',
             'error' => 'unexpected_error',

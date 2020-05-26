@@ -34,17 +34,30 @@ final class Request
     private $cookie = array();
 
     /**
+     * @var \Swoole\Http\Response
+     */
+    private $swoole;
+
+    /**
      * @param App $app
      * @param $header
      * @param $params
      * @param $cookie
      */
-    public function __construct($app, $header, $params, $cookie = [])
+    public function __construct($app, $header = [], $params = [], $cookie = [])
     {
         $this->app = $app;
         $this->header = $header;
         $this->params = $params;
         $this->cookie = $cookie;
+    }
+
+    /**
+     * @param \Swoole\Http\Request $request
+     */
+    public function setSwoole(\Swoole\Http\Request $request)
+    {
+        $this->swoole = $request;
     }
 
     /**
