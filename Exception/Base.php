@@ -1,42 +1,22 @@
 <?php
 
-namespace Clover\Nano\Exception;
+namespace Exception;
+
 
 /**
  * Class Base
- * @package Clover\Nano\Exception
+ * @package Exception
  */
-abstract class Base extends \Exception
+class Base extends \Clover\Nano\Exception\Base
 {
-    protected $status = 'error';
-    protected $error = '';
-    protected $desc = '';
-    protected $extra = [];
-    protected $data = [];
-
-    public function __construct($message = '', $code = '', $extra = [])
+    /**
+     * Base constructor.
+     * @param string $desc
+     * @param string $code
+     * @param array $extra
+     */
+    final public function __construct($desc, $code = '', $extra = [])
     {
-        parent::__construct($message);
-        $this->desc = $message . "@" . $this->getFile() . ":" . $this->getLine();
-        $this->data = [
-            'status' => 'error',
-            'error' => $this->error,
-            'desc' => $this->desc,
-            'profiler' => [],
-            'systrace' => $this->getTraceAsString()
-        ];
-        $this->data['code'] = $code ? $code : '';
-        $this->extra = array_replace($this->extra, $extra);
-        $this->data = array_replace($this->extra, $this->data);
-    }
-
-    public function addExtra($k, $v)
-    {
-        $this->data[$k] = $v;
-    }
-
-    public function fetch()
-    {
-        return $this->data;
+        parent::__construct($desc, $code, $extra);
     }
 }

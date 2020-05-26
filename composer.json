@@ -1,5 +1,6 @@
 {
   "name": "cloverphp\/nano",
+  "type": "project",
   "require": {
     "php": "^5.6 || >=7.0",
     "ext-json": "*",
@@ -8,12 +9,13 @@
     "ext-ctype": "*",
     "ext-zlib": "*",
     "ext-mbstring": "*",
-    "ext-bcmath": "*"
+    "ext-bcmath": "*",
+    "ext-fileinfo": "*"
   },
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Clover\\Nano\\": ""
+      "Clover\\Nano\\": "Engine/"
     }
   }
 }
