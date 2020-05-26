@@ -2,9 +2,9 @@
 
 namespace Model;
 
-use Clover\engins\Core\App;
-use Clover\engins\Core\Model;
-use Clover\engins\Exception\InternalError;
+use Clover\Nano\Core\App;
+use Clover\Nano\Core\Model;
+use Clover\Nano\Exception\InternalError;
 use ReflectionClass;
 use ReflectionException;
 

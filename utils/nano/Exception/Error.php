@@ -1,6 +1,6 @@
 <?php
 
-namespace Clover\engins\Exception;
+namespace Clover\Nano\Exception;
 
 /**
  * Class Base

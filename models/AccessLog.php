@@ -3,9 +3,9 @@
 namespace Model;
 
 use mysqli_result;
-use Clover\engins\Core\Common;
-use Clover\engins\Core\Model;
-use Clover\engins\Exception\DBQueryError;
+use Clover\Nano\Core\Common;
+use Clover\Nano\Core\Model;
+use Clover\Nano\Exception\DBQueryError;
 
 /**
  * Class AccessLog

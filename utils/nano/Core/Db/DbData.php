@@ -1,10 +1,10 @@
 <?php
 
-namespace Clover\engins\Core\Db;
+namespace Clover\Nano\Core\Db;
 
 use mysqli_result;
-use Clover\engins\Core\App;
-use Clover\engins\Exception\DBQueryError;
+use Clover\Nano\Core\App;
+use Clover\Nano\Exception\DBQueryError;
 
 class DbData
 {

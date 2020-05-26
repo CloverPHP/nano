@@ -1,10 +1,10 @@
 <?php
 
-namespace Clover\engins\Core\Redis;
+namespace Clover\Nano\Core\Redis;
 
 use Exception;
-use Clover\engins\Core\App;
-use Clover\engins\Exception\InternalError;
+use Clover\Nano\Core\App;
+use Clover\Nano\Exception\InternalError;
 
 /**
  * Class RedisBase

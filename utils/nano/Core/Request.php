@@ -1,8 +1,8 @@
 <?php
 
-namespace Clover\engins\Core;
+namespace Clover\Nano\Core;
 
-use Clover\engins\Exception\InvalidParams;
+use Clover\Nano\Exception\InvalidParams;
 
 /**
  * @property $service

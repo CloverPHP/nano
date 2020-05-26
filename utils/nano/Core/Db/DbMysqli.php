@@ -1,11 +1,11 @@
 <?PHP
 
-namespace Clover\engins\Core\Db;
+namespace Clover\Nano\Core\Db;
 
 use mysqli;
 use mysqli_result;
-use Clover\engins\Core\App;
-use Clover\engins\Exception\DBQueryError;
+use Clover\Nano\Core\App;
+use Clover\Nano\Exception\DBQueryError;
 use function mysqli_errno;
 use function mysqli_error;
 use function mysqli_field_count;

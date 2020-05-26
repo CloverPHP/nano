@@ -1,9 +1,9 @@
 <?php
 
-namespace Clover\engins\Core;
+namespace Clover\Nano\Core;
 
-use Clover\engins\Core\Redis\RedisBase;
-use Clover\engins\Exception\InternalError;
+use Clover\Nano\Core\Redis\RedisBase;
+use Clover\Nano\Exception\InternalError;
 
 
 /**

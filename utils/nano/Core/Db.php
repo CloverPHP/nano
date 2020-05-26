@@ -1,9 +1,9 @@
 <?php
 
-namespace Clover\engins\Core;
+namespace Clover\Nano\Core;
 
-use Clover\engins\Core\Db\DbData;
-use Clover\engins\Exception\DBQueryError;
+use Clover\Nano\Core\Db\DbData;
+use Clover\Nano\Exception\DBQueryError;
 
 /**
  * Class Db

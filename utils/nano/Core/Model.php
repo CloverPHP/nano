@@ -1,8 +1,8 @@
 <?php
 
-namespace Clover\engins\Core;
+namespace Clover\Nano\Core;
 
-use Clover\engins\Exception\DBQueryError;
+use Clover\Nano\Exception\DBQueryError;
 use mysqli_result;
 
 /**

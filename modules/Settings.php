@@ -3,8 +3,8 @@
 namespace Module;
 
 use mysqli_result;
-use Clover\engins\Core\App;
-use Clover\engins\Exception\DBQueryError;
+use Clover\Nano\Core\App;
+use Clover\Nano\Exception\DBQueryError;
 
 /**
  * Class Settings

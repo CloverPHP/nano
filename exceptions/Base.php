@@ -7,7 +7,7 @@ namespace Exception;
  * Class Base
  * @package Exception
  */
-class Base extends \Clover\engins\Exception\Base
+class Base extends \Clover\Nano\Exception\Base
 {
     /**
      * Base constructor.
