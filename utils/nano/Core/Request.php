@@ -154,14 +154,24 @@ final class Request
         $method = $this->app->getServerParam('http_x_requested_with', '');
         return (strtoupper($method) === 'XMLHTTPREQUEST');
     }
+
+
+
+    /**
+     * @param array $header
+     */
+    final public function setHeader(array $header)
+    {
+        $this->params = array_replace_recursive($this->header, $header);
+    }
+
     /**
      * @param array $params
-     * @param array $array
-     * @param bool $raiseException
-     * @param bool $immediate
-     * @return bool|string|array
-     * @throws InvalidParams
      */
+    final public function setParams(array $params)
+    {
+        $this->params = array_replace_recursive($this->params, $params);
+    }
 
     /**
      * Validate all the parameter accordingly requirement
