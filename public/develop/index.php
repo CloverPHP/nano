@@ -2,7 +2,7 @@
 
 use Clover\Nano\Bootstrap;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../utils/autoload.php';
 
 try {
     $boot = new Bootstrap('nano', 'develop', false);
