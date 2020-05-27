@@ -19,7 +19,7 @@
       "Model\\": "models/",
       "Module\\": "modules/",
       "Exception\\": "exceptions/",
-      "Clover\\Nano\\": "utils/nano/"
+      "Clover\\Nano\\": "utils/clover/nano/"
     }
   }
 }
