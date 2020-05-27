@@ -27,27 +27,30 @@ class Hook
     final public function __construct(App $app)
     {
         $this->app = $app;
+    }
+
+    final public function listen()
+    {
+        $this->app->event->on('runtime_error', [$this, 'runtimeError']);
+        $this->app->event->on('unexpected_error', [$this, 'unexceptionedError']);
         //
-        $app->event->on('runtime_error', [$this, 'runtimeError']);
-        $app->event->on('unexpected_error', [$this, 'unexceptionedError']);
+        $this->app->event->on('access_check', [$this, 'accessCheck']);
+        $this->app->event->on('access_log', [$this, 'accessLog']);
         //
-        $app->event->on('access_check', [$this, 'accessCheck']);
-        $app->event->on('access_log', [$this, 'accessLog']);
+        $this->app->event->on('before_commit', [$this, 'beforeCommit']);
+        $this->app->event->on('db_commit', [$this, 'dbCommit']);
+        $this->app->event->on('commit_done', [$this, 'commitDone']);
+        $this->app->event->on('commit_fail', [$this, 'commitFail']);
+        $this->app->event->on('after_commit', [$this, 'afterCommit']);
         //
-        $app->event->on('before_commit', [$this, 'beforeCommit']);
-        $app->event->on('db_commit', [$this, 'dbCommit']);
-        $app->event->on('commit_done', [$this, 'commitDone']);
-        $app->event->on('commit_fail', [$this, 'commitFail']);
-        $app->event->on('after_commit', [$this, 'afterCommit']);
+        $this->app->event->on('before_rollback', [$this, 'beforeRollback']);
+        $this->app->event->on('db_rollback', [$this, 'dbRollback']);
+        $this->app->event->on('rollback_done', [$this, 'rollbackDone']);
+        $this->app->event->on('rollback_fail', [$this, 'rollbackFail']);
+        $this->app->event->on('after_rollback', [$this, 'afterRollback']);
         //
-        $app->event->on('before_rollback', [$this, 'beforeRollback']);
-        $app->event->on('db_rollback', [$this, 'dbRollback']);
-        $app->event->on('rollback_done', [$this, 'rollbackDone']);
-        $app->event->on('rollback_fail', [$this, 'rollbackFail']);
-        $app->event->on('after_rollback', [$this, 'afterRollback']);
-        //
-        $app->event->on('before_output', [$this, 'afterAccess']);
-        $app->event->on('after_output', [$this, 'afterAccess']);
+        $this->app->event->on('before_output', [$this, 'afterAccess']);
+        $this->app->event->on('after_output', [$this, 'afterAccess']);
 
     }
 

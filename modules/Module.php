@@ -53,15 +53,13 @@ final class Module
                     if ($object instanceof Model) {
                         $this->components[$className] = $object;
                         return $object;
-                    } else {
+                    } else
                         throw new InternalError("Module Invalid:{$className}");
-                    }
                 } catch (ReflectionException $ex) {
                     throw new InternalError($ex->getMessage());
                 }
-            } else {
+            } else
                 throw new InternalError("Module Not Found:{$className}");
-            }
         }
         return $this->components[$className];
     }

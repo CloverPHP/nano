@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Server;
-
 
 use Clover\Nano\Bootstrap;
 use Clover\Nano\Core\Common;
 use Simps\Context;
 use Simps\Listener;
-use Simps\Route;
 use Simps\Server\Http;
+use Swoole\Server;
 use Swoole\Timer;
 use Throwable;
+use Exception;
 
 /**
  * Class HttpServer
@@ -35,9 +36,16 @@ class HttpServer extends Http
         unset($boot);
     }
 
-    public function onWorkerStart(\Swoole\Server $server, int $workerId)
+    /**
+     * @param Server $server
+     * @param int $workerId
+     * @throws Exception
+     */
+    public function onWorkerStart(Server $server, int $workerId)
     {
-        Timer::tick(5000, function () {
+        Listener::getInstance()->listen('workerStart', $server, $workerId);
+
+        Timer::tick(60000, function () {
             gc_collect_cycles();
             echo sprintf("pid=%d,mem=%s\n", getmypid(), Common::fileSize2Unit(memory_get_usage()));
         });

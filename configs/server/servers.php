@@ -7,9 +7,9 @@ use Server\HttpServer;
 
 return [
     'mode' => SWOOLE_BASE,
-    'nano' => [
+    'http' => [
         'ip' => '0.0.0.0',
-        'port' => 8080,
+        'port' => 9501,
         'sock_type' => SWOOLE_SOCK_TCP,
         'callbacks' => [
         ],
@@ -23,25 +23,11 @@ return [
             'buffer_output_size' => 2 * 1024 * 1024,
         ]
     ],
-    'http' => [
-        'ip' => '0.0.0.0',
-        'port' => 9501,
-        'sock_type' => SWOOLE_SOCK_TCP,
-        'callbacks' => [
-        ],
-        'settings' => [
-            'worker_num' => 1,
-            'max_request' => 0,
-            'max_coroutine' => 10000,
-            'open_tcp_nodelay' => true,
-            'socket_buffer_size' => 2 * 1024 * 1024,
-            'buffer_output_size' => 2 * 1024 * 1024,
-        ]
-    ],
     'ws' => [
         'ip' => '0.0.0.0',
         'port' => 9502,
         'sock_type' => SWOOLE_SOCK_TCP,
+        'class_name' => \Server\WebSocket::class,
         'callbacks' => [
             "open" => [WebSocket::class, 'onOpen'],
             "message" => [WebSocket::class, 'onMessage'],
