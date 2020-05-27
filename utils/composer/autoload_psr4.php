@@ -13,5 +13,5 @@ return array(
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'Exception\\' => array($baseDir . '/exceptions'),
     'Clover\\Nano\\' => array($baseDir . '/utils/clover/nano'),
-    'App\\' => array($baseDir . '/app'),
+    'App\\' => array($baseDir . '/apps'),
 );

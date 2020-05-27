@@ -54,65 +54,6 @@
         ]
     },
     {
-        "name": "simple-swoole/simps",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/simple-swoole/simps.git",
-            "reference": "c2820ca2d722ff01bee0260d0a56982fc34c4aec"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/simple-swoole/simps/zipball/c2820ca2d722ff01bee0260d0a56982fc34c4aec",
-            "reference": "c2820ca2d722ff01bee0260d0a56982fc34c4aec",
-            "shasum": "",
-            "mirrors": [
-                {
-                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                    "preferred": true
-                }
-            ]
-        },
-        "require": {
-            "ext-swoole": ">=4.4",
-            "nikic/fast-route": "^1.3",
-            "php": ">=7.1"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^2.9"
-        },
-        "time": "2020-05-12T06:55:26+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Simps\\": "src/"
-            },
-            "files": [
-                "src/functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Luffy",
-                "email": "52o@qq52o.cn"
-            }
-        ],
-        "description": "A simple, lightweight and high-performance PHP coroutine framework.",
-        "keywords": [
-            "Simple",
-            "coroutine",
-            "php",
-            "simps",
-            "swoole"
-        ]
-    },
-    {
         "name": "simple-swoole/db",
         "version": "v1.0.1",
         "version_normalized": "1.0.1.0",
@@ -166,6 +107,65 @@
             "Simple",
             "coroutine",
             "db",
+            "php",
+            "simps",
+            "swoole"
+        ]
+    },
+    {
+        "name": "simple-swoole/simps",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/simple-swoole/simps.git",
+            "reference": "58da69726fddf3bbb0c486f8b7cdeddd40117e44"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/simple-swoole/simps/zipball/58da69726fddf3bbb0c486f8b7cdeddd40117e44",
+            "reference": "58da69726fddf3bbb0c486f8b7cdeddd40117e44",
+            "shasum": "",
+            "mirrors": [
+                {
+                    "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                    "preferred": true
+                }
+            ]
+        },
+        "require": {
+            "ext-swoole": ">=4.4",
+            "nikic/fast-route": "^1.3",
+            "php": ">=7.1"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.9"
+        },
+        "time": "2020-05-27T09:33:37+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Simps\\": "src/"
+            },
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Luffy",
+                "email": "52o@qq52o.cn"
+            }
+        ],
+        "description": "A simple, lightweight and high-performance PHP coroutine framework.",
+        "keywords": [
+            "Simple",
+            "coroutine",
             "php",
             "simps",
             "swoole"

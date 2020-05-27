@@ -9,7 +9,7 @@ class ComposerStaticInit114dcccc0c3f36c19949911df4d78361
     public static $files = array (
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         'a80a00e91dfb988b39fee09aeaac3a1e' => __DIR__ . '/..' . '/simple-swoole/simps/src/functions.php',
-        'ee998883ca9f1c48f841ecd9a640323c' => __DIR__ . '/../..' . '/configs/nano/functions.php',
+        'bc5329889c908156074ca6ae6039fc38' => __DIR__ . '/../..' . '/utils/clover/nano/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -72,7 +72,7 @@ class ComposerStaticInit114dcccc0c3f36c19949911df4d78361
         ),
         'App\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app',
+            0 => __DIR__ . '/../..' . '/apps',
         ),
     );
 
