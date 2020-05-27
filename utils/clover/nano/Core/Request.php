@@ -17,21 +17,26 @@ final class Request
     private $app;
 
     /**
-     *
-     * @var array
+     * @var string
      */
-    private $header = array();
+    private $uri = '';
 
     /**
      *
      * @var array
      */
-    private $params = array();
+    private $header = [];
+
+    /**
+     *
+     * @var array
+     */
+    private $params = [];
 
     /**
      * @var array
      */
-    private $cookie = array();
+    private $cookie = [];
 
     /**
      * @var \Swoole\Http\Response
@@ -156,13 +161,12 @@ final class Request
     }
 
 
-
     /**
      * @param array $header
      */
     final public function setHeader(array $header)
     {
-        $this->params = array_replace_recursive($this->header, $header);
+        $this->header = array_replace_recursive($this->header, $header);
     }
 
     /**
@@ -171,6 +175,22 @@ final class Request
     final public function setParams(array $params)
     {
         $this->params = array_replace_recursive($this->params, $params);
+    }
+
+    /**
+     * @return string
+     */
+    final public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param $uri
+     */
+    final public function setUri($uri)
+    {
+        $this->uri = $uri;
     }
 
     /**

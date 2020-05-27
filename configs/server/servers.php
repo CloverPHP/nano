@@ -2,10 +2,27 @@
 
 declare(strict_types=1);
 
-use Config\Server\Events\WebSocket;
+use Server\Events\WebSocket;
+use Server\HttpServer;
 
 return [
     'mode' => SWOOLE_BASE,
+    'nano' => [
+        'ip' => '0.0.0.0',
+        'port' => 8080,
+        'sock_type' => SWOOLE_SOCK_TCP,
+        'callbacks' => [
+        ],
+        'class_name' => HttpServer::class,
+        'settings' => [
+            'worker_num' => 1,
+            'max_request' => 0,
+            'max_coroutine' => 10000,
+            'open_tcp_nodelay' => true,
+            'socket_buffer_size' => 2 * 1024 * 1024,
+            'buffer_output_size' => 2 * 1024 * 1024,
+        ]
+    ],
     'http' => [
         'ip' => '0.0.0.0',
         'port' => 9501,

@@ -143,14 +143,15 @@ class App
                     $output['profiler'] = $this->profiler->fetch();
                 }
             } catch (Throwable $ex) {//php7.0+
-                $this->handleException($ex);
+                $output = $this->handleException($ex);
             } catch (Exception $ex) {//php5.6.x
-                $this->handleException($ex);
+                $output = $this->handleException($ex);
             }
         } catch (Throwable $ex) {//php7.0+
-            $this->handleException($ex);
+            echo $ex->getMessage();
+            $output = $this->handleException($ex);
         } catch (Exception $ex) {//php5.6.x
-            $this->handleException($ex);
+            $output = $this->handleException($ex);
         }
 
         $this->event->emit('access_log', [$this, &$output]);
@@ -316,12 +317,10 @@ class App
 
     /**
      * @param Exception $ex
+     * @return array|null
      */
     final public function handleException($ex)
     {
-        if (defined('IN_SWOOLE'))
-            return;
-
         $output = array_merge(array(
             'status' => 'error',
             'error' => 'unexpected_error',
@@ -331,6 +330,8 @@ class App
         ));
         $output['profiler']['systrace'] = $ex->getTraceAsString();
         $this->logger->emergency($output['desc']);
+        if (defined('IN_SWOOLE'))
+            return $output;
         $this->response->output($output);
         exit(0);
     }

@@ -19,10 +19,6 @@ class Bootstrap
     private $name = 'nano';
     private $env = 'develop';
     private $debug = true;
-    private $header = [];
-    private $params = [];
-    private $cookie = [];
-    private $server = [];
 
     /**
      * Boot constructor.
@@ -69,65 +65,74 @@ class Bootstrap
     public function __invoke(Request $request = null, Response $response = null)
     {
         if (defined('IN_SWOOLE'))
-            $this->parseSwoole($request, $response);
+            $this->parseSwoole($header, $params, $cookie, $server, $request, $response);
         elseif (php_sapi_name() !== 'cli')
-            $this->parseCgi();
+            $this->parseCgi($header, $params, $cookie, $server, $request, $response);
         else
-            $this->parseCmd();
+            $this->parseCmd($header, $params, $cookie, $server, $request, $response);
 
         //
-        $this->prepareRequest();
-        $app = new App($this->header, $this->params, $this->cookie, $this->server, $request, $response);
+        $header = $params = $cookie = $server = [];
+        $app = new App($header, $params, $cookie, $server, $request, $response);
         $output = $app->__invoke();
         if (defined('IN_SWOOLE')) {
             if ($header = $app->response->getHeader()) {
                 foreach ($header as $k => $v)
                     $response->header($k, $v);
             }
-            $response->end($output);
+            $response->end(json_encode($output));
         }
     }
 
 
     /**
      * 解析cgi/fpm的参数
+     * @param array $header
+     * @param array $params
+     * @param array $cookie
+     * @param array $server
+     * @param Request|null $request
+     * @param Response|null $response
      */
-    final private function parseCgi()
+    final private function parseCgi(&$header, &$params, &$cookie, &$server, $request = null, $response = null)
     {
         foreach ($_COOKIE as $key => $value)
-            $this->cookie[$key] = $value;
+            $cookie[$key] = $value;
         foreach ($_SERVER as $key => $value) {
             if (substr($key, 0, 5) === 'http_')
-                $this->header[strtolower(str_replace("http_", "", $key))] = $value;
+                $header[strtolower(str_replace("http_", "", $key))] = $value;
             else
-                $this->server[$key] = $value;
+                $server[$key] = $value;
         }
         if (!isset($this->server['path_info']))
-            $this->server['path_info'] = isset($this->server['request_uri']) ? ['request_uri'] : '';
-        $mime = isset($this->server['content_type']) ? $this->server['content_type'] : '';
-        $this->params = stristr($mime, 'json') === false ? array_replace($_GET, $_POST, $_FILES)
+            $server['path_info'] = isset($server['request_uri']) ? ['request_uri'] : '';
+        $mime = isset($this->server['content_type']) ? $server['content_type'] : '';
+        $params = stristr($mime, 'json') === false ? array_replace($_GET, $_POST, $_FILES)
             : (array)json_decode(file_get_contents('php://input'), true);
     }
 
     /**
      * 解析传统命令行的参数
+     * @param array $header
+     * @param array $params
+     * @param array $cookie
+     * @param array $server
+     * @param Request|null $request
+     * @param Response|null $response
      */
-    final private function parseCmd()
+    final private function parseCmd(&$header, &$params, &$cookie, &$server, $request = null, $response = null)
     {
         //
+        $header = $cookie = [];
         foreach ($_SERVER as $key => $value)
-            $this->server[$key] = $value;
+            $server[$key] = $value;
 
         //
         $opts = getopt('r::', ['run:']);
         $run = parse_url($opts['run']);
-        if (preg_match("/^([a-z][a-z0-9]*)\/([a-z][a-z0-9]*)(\?.*)?$/i", trim($run['path'], "\t\n\r\0\x0B/ "), $matches)) {
-            $this->header['service'] = $matches[1];
-            $this->header['action'] = $matches[2];
-            $this->server['path_info'] = $run['path'];
-            if (!empty($run['query']))
-                parse_str($run['query'], $this->params);
-        } else {
+        $server['path_info'] = !empty($run['path']) ? $run['path'] : '';
+        !empty($run['query']) ? parse_str($run['query'], $params) : [];
+        if (!$server['path_info']) {
             fwrite(STDOUT, "example:/usr/bin/php path/to/index.php --run=/path/to/service?query_params" . PHP_EOL);
             exit(0);
         }
@@ -135,40 +140,24 @@ class Bootstrap
 
     /**
      * 解析swoole请求的参数
+     * @param array $header
+     * @param array $params
+     * @param array $cookie
+     * @param array $server
      * @param Request $request
      * @param Response $response
      */
-    final private function parseSwoole(Request $request, Response $response)
+    final private function parseSwoole(&$header, &$params, &$cookie, &$server, Request $request, Response $response)
     {
-        $this->header = &$request->header;
-        $this->server = &$request->server;
-        $this->cookie = &$request->cookie;
-        $mime = isset($this->server['content_type']) ? $this->server['content_type'] : '';
-        $this->params = stristr($mime, 'json') === false ? array_replace($request->get, $request->post, $request->files)
+        $header = &$request->header;
+        $cookie = &$request->cookie;
+        $server = &$request->server;
+        if (!isset($server['path_info']))
+            $server['path_info'] = '';
+
+        $mime = isset($this->server['content_type']) ? $server['content_type'] : '';
+        $params = stristr($mime, 'json') === false
+            ? array_replace((array)$request->get, (array)$request->post, (array)$request->files)
             : (array)json_decode($request->rawContent(), true);
-    }
-
-    /**
-     * 准备好nano特有的参数
-     */
-    final private function prepareRequest()
-    {
-        $this->header['service'] = $this->header['service'] ? $this->header['service'] : '';
-        if (empty($this->header['service'])) {
-            if ($this->server['path_info']) {
-                $parts = explode("/", trim($this->server['path_info'], "\t\r\n\0\x0B/"), 2);
-                $this->header['service'] = array_shift($parts);
-                if ($parts) $this->header['action'] = array_shift($parts);
-            } else
-                $this->header['service'] = 'Index';
-        }
-        $this->header['action'] = $this->header['action'] ? $this->header['action'] : '';
-
-        //
-        if (!empty($this->server['php_auth_user']))
-            $this->header['username'] = (string)$this->server['php_auth_user'];
-        if (!empty($this->server['php_auth_pw']))
-            $this->header['password'] = (string)$this->server['php_auth_pw'];
-
     }
 }

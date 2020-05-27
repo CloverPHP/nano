@@ -2,6 +2,8 @@
 
 namespace App\Index;
 
+use Clover\Nano\Core\App;
+
 /**
  * Class Index
  */
@@ -9,10 +11,23 @@ class Index
 {
 
     /**
-     * Index constructor.
+     * @var App
      */
-    final public function __construct()
-    {
+    private $app;
 
+    /**
+     * Index constructor.
+     * @param App $app
+     */
+    final public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * @param App $app
+     */
+    final public function __invoke(App $app)
+    {
     }
 }
