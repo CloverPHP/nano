@@ -51,6 +51,7 @@ class Controller
     final private function prepareRequest()
     {
         $pathInfo = $this->app->getServerParam('path_info');
+        $pathInfo = trim($pathInfo, "\t\n\r \v/ ");
         if (!$pathInfo) $pathInfo = 'Index/Index';
 
         $parts = array_map(function ($v) use ($pathInfo) {
@@ -59,7 +60,7 @@ class Controller
             else
                 throw new InvalidParams("error path :{$pathInfo}.", 'invalid_pathinfo');
 
-        }, explode("/", trim($pathInfo, "\t\n\r \v/ ")));
+        }, explode("/", $pathInfo));
 
         $className = implode("\\", $parts);
         $this->app->request->setUri(str_replace('\\', '/', $className));

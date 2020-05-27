@@ -235,7 +235,7 @@ class App
      */
     public function getServerParam($key, $default = null)
     {
-        return isset($this->server[$key]) ? $this->server : $default;
+        return isset($this->server[$key]) ? $this->server[$key] : $default;
     }
 
 
@@ -255,6 +255,9 @@ class App
      */
     public function handleError()
     {
+        if (defined('IN_SWOOLE'))
+            return;
+
         //1.捕捉致命错误
         register_shutdown_function(function () {
             if ($this->ignoreError())
@@ -279,9 +282,6 @@ class App
         });
 
         //2.设置自定义错误处理
-        if (defined('IN_SWOOLE'))
-            return;
-
         set_error_handler(function ($errno, $error, $errFile, $errLine, $clear = false) {
             if ($this->ignoreError())
                 return;
