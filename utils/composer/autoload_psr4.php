@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Simps\\DB\\' => array($vendorDir . '/simple-swoole/db/src'),
     'Simps\\' => array($vendorDir . '/simple-swoole/simps/src'),
+    'Server\\' => array($baseDir . '/servers'),
     'Module\\' => array($baseDir . '/modules'),
     'Model\\' => array($baseDir . '/models'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),

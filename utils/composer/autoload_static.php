@@ -17,6 +17,7 @@ class ComposerStaticInit114dcccc0c3f36c19949911df4d78361
         array (
             'Simps\\DB\\' => 9,
             'Simps\\' => 6,
+            'Server\\' => 7,
         ),
         'M' => 
         array (
@@ -49,6 +50,10 @@ class ComposerStaticInit114dcccc0c3f36c19949911df4d78361
         'Simps\\' => 
         array (
             0 => __DIR__ . '/..' . '/simple-swoole/simps/src',
+        ),
+        'Server\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/servers',
         ),
         'Module\\' => 
         array (
