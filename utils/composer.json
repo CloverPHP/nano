@@ -22,6 +22,9 @@
       "Module\\": "modules/",
       "Exception\\": "exceptions/",
       "Clover\\Nano\\": "utils/clover/nano/"
-    }
+    },
+    "files": [
+      "configs/nano/functions.php"
+    ]
   }
 }

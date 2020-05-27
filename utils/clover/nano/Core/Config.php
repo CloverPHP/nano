@@ -2,6 +2,8 @@
 
 namespace Clover\Nano\Core;
 
+use Clover\Nano\EnvConfig;
+
 /**
  * Class Config
  * @package Clover\Nano\Core
@@ -24,16 +26,8 @@ final class Config
     public function __construct(App $app)
     {
         $this->app = $app;
-
-        //加载配置文件
-        $common = sprintf("%s/configs/%s.php", APP_PATH, strtolower(APP_ENV));
-        if (is_file($common)) {
-            $this->data = (array)(include $common);
-        } else {
-            $this->data = [];
-        }
+        $this->data = (array)EnvConfig::getInstance()->get(strtolower(APP_ENV));
     }
-
 
     /**
      * @param string|null $key
@@ -48,7 +42,18 @@ final class Config
             return isset($this->data[$key]) ? $this->data[$key] : $default;
         } else {
             $parts = explode('.', $key);
-            $data = &$this->data;
+
+            //检查加载配置文件
+            $file = array_shift($parts);
+            if (empty($this->data[$file])) {
+                $file = APP_PATH . 'configs/common/' . $file . '.php';
+                if (!is_file($file))
+                    return $default;
+                $this->data[$file] = include $file;
+            }
+
+            //返回具体配置参数
+            $data = &$this->data[$file];
             while ($key = array_shift($parts)) {
                 if (isset($data[$key])) {
                     $data = &$data[$key];

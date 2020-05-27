@@ -1,7 +1,5 @@
 <?php
 
-use App\Hook\AccessCheck;
-
 return [
     'timezone' => 'PRC',
     'db' => [
@@ -30,7 +28,7 @@ return [
         ]
     ],
     'hook' => [
-      'access_check' => 'hook_access_check'
+
     ],
     'logger' => [
         'mode' => 'file',

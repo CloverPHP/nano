@@ -4,6 +4,7 @@ namespace Clover\Nano\Core;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 
 /**
  * Class Common
@@ -112,7 +113,7 @@ final class Common
                 return random_int($min, $max);
             else
                 return mt_rand($min, $max);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return mt_rand($min, $max);
         }
     }
@@ -985,7 +986,7 @@ final class Common
      * @param string $format
      * @param null $time
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function specifyTimeZone($timeZone, $format = 'Y-m-d H:i:s', $time = null)
     {

@@ -4,16 +4,19 @@
 namespace Clover\Nano;
 
 
+use Clover\Nano\Core\App;
+
 /**
- * Class Nano
+ * Class Controller
  */
 class Controller
 {
 
     /**
-     * Nano constructor.
+     * Controller constructor.
+     * @param App $app
      */
-    final public function __construct()
+    final public function __construct(App $app)
     {
 
     }

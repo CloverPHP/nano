@@ -11,17 +11,20 @@
     "ext-mbstring": "*",
     "ext-bcmath": "*",
     "ext-fileinfo": "*",
-    "simple-swoole/simps": "1.0.1",
+    "simple-swoole/simps": "dev-master",
     "simple-swoole/db": "1.0.1"
   },
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "App\\": "app/",
+      "App\\": "apps/",
       "Model\\": "models/",
       "Module\\": "modules/",
       "Exception\\": "exceptions/",
       "Clover\\Nano\\": "utils/clover/nano/"
-    }
+    },
+    "files": [
+      "utils/clover/nano/functions.php"
+    ]
   }
 }
