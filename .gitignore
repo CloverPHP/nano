@@ -3,3 +3,5 @@
 .ide-helper
 composer.lock
 /vendor/
+/test/vendor/
+/test/composer.lock

@@ -1,0 +1,19 @@
+{
+  "name": "cloverphp/nano",
+  "description": "",
+  "type": "library",
+  "require": {
+    "php": "^5.6 || >=7.0",
+    "cloverphp/nano": "dev-master"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "App\\": "apps/",
+      "Model\\": "models/",
+      "Module\\": "modules/",
+      "Server\\": "servers/",
+      "Exception\\": "exceptions/"
+    }
+  }
+}

@@ -1,31 +1,23 @@
 {
   "name": "cloverphp\/nano",
-  "type": "project",
+  "description": "",
+  "type": "library",
   "require": {
     "php": "^5.6 || >=7.0",
     "ext-json": "*",
     "ext-mysqli": "*",
-    "ext-pcntl": "*",
     "ext-ctype": "*",
     "ext-zlib": "*",
     "ext-mbstring": "*",
-    "ext-bcmath": "*",
-    "ext-fileinfo": "*",
-    "simple-swoole/simps": "dev-master",
-    "simple-swoole/db": "1.0.1"
+    "ext-bcmath": "*"
   },
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "App\\": "apps/",
-      "Model\\": "models/",
-      "Module\\": "modules/",
-      "Server\\": "servers/",
-      "Exception\\": "exceptions/",
-      "Clover\\Nano\\": "utils/clover/nano/"
+      "Clover\\Nano\\": "src/"
     },
     "files": [
-      "utils/clover/nano/functions.php"
+      "src/functions.php"
     ]
   }
 }
