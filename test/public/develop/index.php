@@ -1,11 +1,13 @@
 <?php
 
 use Clover\Nano\Bootstrap;
+use Clover\Nano\Startup;
 
-require __DIR__ . '/../../utils/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 try {
-    $boot = new Start('nano', 'develop', false);
+    new Startup('nano', 'develop', true);
+    $boot = new Bootstrap();
     $boot->__invoke();
 } catch (Throwable $e) {
     header('Content-type: text/html; charset=UTF-8', true, 500);

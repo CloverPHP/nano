@@ -64,7 +64,7 @@ final class Profiler
         $this->config = $app->config->get('profiler');
         $this->maxLog = $this->config['maxLog'] ? $this->config['maxLog'] : 100;
         $this->isEnable = $this->config['enable'] ? $this->config['enable'] : false;
-        $this->initTime = round(microtime(true), 1);
+        $this->initTime = round(microtime(true), 5);
     }
 
     /**
@@ -108,7 +108,7 @@ final class Profiler
         ];
 
         foreach ($this->timeUsage as $key => $time) {
-            $profiler['timeusage'][$key] = round($time, 2) . 'ms';
+            $profiler['timeusage'][$key] = round($time, 5) . 'ms';
         }
         return $profiler;
     }
@@ -128,7 +128,7 @@ final class Profiler
     public function elapsed($milliSec = true)
     {
         if ($milliSec) {
-            return round(((microtime(true)) - $this->initTime) * 1000, 2);
+            return round((round(microtime(true), 3) - $this->initTime) * 1000, 2);
         } else {
             return round(microtime(true) - $this->initTime, 2);
         }
