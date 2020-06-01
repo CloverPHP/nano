@@ -148,7 +148,6 @@ class App
                 $output = $this->handleException($ex);
             }
         } catch (Throwable $ex) {//php7.0+
-            echo $ex->getMessage();
             $output = $this->handleException($ex);
         } catch (Exception $ex) {//php5.6.x
             $output = $this->handleException($ex);
