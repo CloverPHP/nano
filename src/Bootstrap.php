@@ -73,8 +73,8 @@ class Bootstrap
             else
                 $server[$key] = $value;
         }
-        if (!isset($this->server['path_info']))
-            $server['path_info'] = isset($server['request_uri']) ? ['request_uri'] : '/';
+        if (!isset($server['path_info']))
+            $server['path_info'] = isset($server['request_uri']) ? $server['request_uri'] : '/';
         $mime = isset($this->server['content_type']) ? $server['content_type'] : '';
         $params = stristr($mime, 'json') === false ? array_replace($_GET, $_POST, $_FILES)
             : (array)json_decode(file_get_contents('php://input'), true);
