@@ -1,5 +1,5 @@
 {
-  "name": "cloverphp/nano-test",
+  "name": "cloverphp/nano",
   "description": "",
   "type": "library",
   "require": {
