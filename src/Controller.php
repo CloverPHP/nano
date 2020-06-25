@@ -63,7 +63,6 @@ class Controller
         }, explode("/", $pathInfo));
 
         $className = implode("\\", $parts);
-        $this->app->request->setUri(str_replace('\\', '/', $className));
         $this->app->request->setHeader([
             'service' => array_shift($parts),
             'action' => !empty($parts) ? implode("\\", $parts) : 'Index',

@@ -5,8 +5,9 @@ namespace Clover\Nano\Core;
 use Clover\Nano\Exception\InvalidParams;
 
 /**
- * @property $service
- * @property $action
+ * @property-read  $service
+ * @property-read  $action
+ * @property-read $swoole
  */
 final class Request
 {
@@ -44,6 +45,11 @@ final class Request
     private $swoole;
 
     /**
+     * @var string
+     */
+    private $rawContent;
+
+    /**
      * @param App $app
      * @param $header
      * @param $params
@@ -71,7 +77,7 @@ final class Request
      */
     public function __get($name)
     {
-        if (in_array($name, ['service', 'action'], true)) {
+        if (isset($this->$name)) {
             return $this->$name;
         } else {
             return null;
@@ -191,6 +197,22 @@ final class Request
     final public function setUri($uri)
     {
         $this->uri = $uri;
+    }
+
+    /**
+     * @return string
+     */
+    final public function getRawContent()
+    {
+        return $this->rawContent;
+    }
+
+    /**
+     * @param $content
+     */
+    final public function setRawContent($content)
+    {
+        $this->rawContent = $content;
     }
 
     /**

@@ -95,6 +95,11 @@ class App
         if (defined('IN_SWOOLE')) {
             $this->request->setSwoole($request);
             $this->response->setSwoole($response);
+            $this->request->setUri($request->server['request_uri']);
+            $this->request->setRawContent($request->rawContent());
+        }else{
+            $this->request->setUri($server['request_uri']);
+            $this->request->setRawContent(file_get_contents('php://input'));
         }
 
         //错误处理和时区

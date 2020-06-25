@@ -48,7 +48,7 @@ class Bootstrap
             }
             $response->end(json_encode($output));
             unset($app);
-        }else
+        } else
             unset($app);
     }
 
@@ -65,15 +65,16 @@ class Bootstrap
     final private function parseCgi(&$header, &$params, &$cookie, &$server, $request = null, $response = null)
     {
         foreach ($_COOKIE as $key => $value)
-            $cookie[$key] = $value;
+            $cookie[strtolower($key)] = $value;
         foreach ($_SERVER as $key => $value) {
+            $key = strtolower($key);
             if (substr($key, 0, 5) === 'http_')
                 $header[strtolower(str_replace("http_", "", $key))] = $value;
             else
                 $server[$key] = $value;
         }
-        if (!isset($this->server['path_info']))
-            $server['path_info'] = isset($server['request_uri']) ? ['request_uri'] : '/';
+        if (!isset($server['path_info']))
+            $server['path_info'] = isset($server['request_uri']) ? $server['request_uri'] : '/';
         $mime = isset($this->server['content_type']) ? $server['content_type'] : '';
         $params = stristr($mime, 'json') === false ? array_replace($_GET, $_POST, $_FILES)
             : (array)json_decode(file_get_contents('php://input'), true);
