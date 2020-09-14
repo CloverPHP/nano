@@ -98,7 +98,7 @@ class DbMysqli
      */
     final public function __get($name)
     {
-        return isset($this->{$name}) ? isset($this->{$name}) : null;
+        return isset($this->{$name}) ? $this->{$name} : null;
     }
 
 
